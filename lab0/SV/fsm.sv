@@ -25,5 +25,6 @@ module fsm (input logic  clk,
    
    // output logic
    assign y = (state == S2);
-   
 endmodule // patternMoore
+
+// test comment
