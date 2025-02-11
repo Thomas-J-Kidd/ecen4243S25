@@ -35,32 +35,38 @@ module testbench();
    logic        MemWrite;
 
    // instantiate device to be tested
-   top dut(clk, reset, WriteData, DataAdr, MemWrite);
+   top dut(
+       .clk(clk),
+       .reset(reset),
+       .WriteData(WriteData),
+       .DataAdr(DataAdr),
+       .MemWrite(MemWrite)
+   );
 
    initial
      begin
-	string memfilename;
+  string memfilename;
         memfilename = {"../riscvtest/riscvtest.memfile"};
         $readmemh(memfilename, dut.imem.RAM);
      end
 
-   
+
    // initialize test
    initial
      begin
-	reset <= 1; # 22; reset <= 0;
+  reset <= 1; # 22; reset <= 0;
      end
 
    // generate clock to sequence tests
    always
      begin
-	clk <= 1; # 5; clk <= 0; # 5;
+  clk <= 1; # 5; clk <= 0; # 5;
      end
 
    // check results
    always @(negedge clk)
      begin
-	if(MemWrite) begin
+  if(MemWrite) begin
            if(DataAdr === 100 & WriteData === 25) begin
               $display("Simulation succeeded");
               $stop;
@@ -68,25 +74,25 @@ module testbench();
               $display("Simulation failed");
               $stop;
            end
-	end
+  end
      end
 endmodule // testbench
 
 module riscvsingle (input  logic        clk, reset,
-		    output logic [31:0] PC,
-		    input  logic [31:0] Instr,
-		    output logic 	MemWrite,
-		    output logic [31:0] ALUResult, WriteData,
-		    input  logic [31:0] ReadData);
-   
-   logic 				ALUSrc, RegWrite, Jump, Zero;
-   logic [1:0] 				ResultSrc, ImmSrc;
-   logic [2:0] 				ALUControl;
-   
+       output logic [31:0] PC,
+       input  logic [31:0] Instr,
+       output logic        MemWrite,
+       output logic [31:0] ALUResult, WriteData,
+       input  logic [31:0] ReadData);
+
+   logic       ALUSrc, RegWrite, Jump, Zero;
+   logic [1:0] ResultSrc, ImmSrc;
+   logic [2:0] ALUControl;
+
    controller c (Instr[6:0], Instr[14:12], Instr[30], Zero,
-		 ResultSrc, MemWrite, PCSrc,
-		 ALUSrc, RegWrite, Jump,
-		 ImmSrc, ALUControl);
+                 ResultSrc, MemWrite, PCSrc,
+                 ALUSrc, RegWrite, Jump,
+                 ImmSrc, ALUControl);
    datapath dp (clk, reset, ResultSrc, PCSrc,
 		ALUSrc, RegWrite,
 		ImmSrc, ALUControl,
