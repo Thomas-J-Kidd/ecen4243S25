@@ -7,7 +7,7 @@
 // a3: n
 // a4: m
 
-// t0: &y[n-m] to check termination of j loop
+// t0: &y[n-m+1] to check termination of j loop
 // t1: &c[m] to check termination of i loop
 // t2: &x[j+m-1]
 // t3: sum
@@ -20,7 +20,9 @@
 
 fir:
 
-	addi a0, zero, 42
+	lw   t1, 4(a0)	    # t1 = x[0+4];
+	lw   t2, 4(a1)	    # t2 = c[0+4];
+	addi t3, zero, 42	
 	
 
 donej:
